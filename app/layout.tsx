@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
-import User from "@/components/User";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +17,6 @@ export default function RootLayout({
       <body className="flex justify-center relative">
         <Navbar />
         <main>{children}</main>
-        <User/>
       </body>
     </html>
   );
