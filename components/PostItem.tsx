@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
@@ -6,6 +7,7 @@ import { MdOutlineSaveAlt } from "react-icons/md";
 import { BsEmojiSmile } from "react-icons/bs";
 import CustomButton from "./CustomButton";
 import { PostItemProps } from "@/types/PostItemProps";
+import { useRouter } from "next/navigation";
 
 const PostItem = ({
   postDescription,
@@ -14,10 +16,14 @@ const PostItem = ({
   userName,
   likes,
 }: PostItemProps) => {
+  const router = useRouter();
   return (
-    <div className="w-96 flex flex-col gap-1 border-b-2 my-3 cursor-pointer">
+    <>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div
+          className="flex items-center gap-2"
+          onClick={() => router.push(`/profile/${userName}`)}
+        >
           {profilImage && (
             <img
               className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
@@ -58,7 +64,7 @@ const PostItem = ({
         />
         <BsEmojiSmile />
       </div>
-    </div>
+    </>
   );
 };
 

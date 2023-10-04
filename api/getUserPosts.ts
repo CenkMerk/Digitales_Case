@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const getPosts = async () => {
+const getUserPosts = async (username:string) => {
   console.log()
   try {
-    const response = await axios.get("https://api.unsplash.com/photos", {
+    const response = await axios.get(`https://api.unsplash.com/users/${username}/photos`, {
       headers: {
         Authorization: process.env.NEXT_PUBLIC_API_URL,
       },
     });
-
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("API fails: ", error);
@@ -16,4 +16,4 @@ const getPosts = async () => {
   }
 };
 
-export default getPosts;
+export default getUserPosts;
