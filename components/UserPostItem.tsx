@@ -16,7 +16,7 @@ const UserPostItem = ({
 }: PostItemProps) => {
   return (
     <div className="flex gap-3">
-      <img className="h-96 w-96" src={postImage} alt="postImage" />
+      <img className="h-full w-96" src={postImage} alt="postImage" />
       <div className="w-full flex flex-col justify-between">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center gap-3">

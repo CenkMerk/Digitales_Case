@@ -8,7 +8,6 @@ const getPosts = async () => {
         Authorization: process.env.NEXT_PUBLIC_API_URL,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("API fails: ", error);

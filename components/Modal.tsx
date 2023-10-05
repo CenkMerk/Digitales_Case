@@ -13,6 +13,7 @@ const Modal: FC<ModalProps> = ({ children, setIsModalOpen }) => {
   function closeModal() {
     setIsOpen(false);
     setIsModalOpen(false);
+    localStorage.setItem("selectedItem", JSON.stringify(null));
   }
 
   return (

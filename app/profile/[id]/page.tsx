@@ -1,5 +1,4 @@
 "use client";
-import getUserPosts from "@/api/getUserPosts";
 import Spinner from "@/components/Spinner";
 import { Root2 } from "@/types/ApiProps";
 import { PostItemProps } from "@/types/PostItemProps";
@@ -10,11 +9,22 @@ import { BiSolidMessageRounded, BiUserPlus } from "react-icons/bi";
 import { AiFillHeart } from "react-icons/ai";
 import Modal from "@/components/Modal";
 import UserPostItem from "@/components/UserPostItem";
+import getUserPosts from "@/api/getUserPosts";
+import { useRouter } from "next/navigation";
+import SelectedPost from "@/components/SelectedPost";
 
 const ProfilId = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
+  const storedSelectedItem = localStorage.getItem("selectedItem");
+  const initialSelectedItem: PostItemProps | null = storedSelectedItem
+    ? JSON.parse(storedSelectedItem)
+    : null;
+
   const [posts, setPosts] = useState<PostItemProps[]>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<PostItemProps | null>(null);
+  const [selectedItem, setSelectedItem] = useState<PostItemProps | null>(
+    initialSelectedItem
+  );
 
   // Use useEffect to fetch data from an API.
   useEffect(() => {
@@ -40,16 +50,24 @@ const ProfilId = ({ params }: { params: { id: string } }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedItem) {
+      localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
+    } else {
+      // Eğer selectedItem null ise, localStorage'dan sil
+      localStorage.removeItem("selectedItem");
+    }
+  }, [selectedItem]);
+
   const HandleClick = (item: PostItemProps) => {
     setIsModalOpen(true);
     setSelectedItem(item);
-    console.log(selectedItem);
   };
 
   return (
     <>
-      {posts ? (
-        <div className="max-w-screen-md ml-44 flex flex-col gap-20 mb-14">
+      {posts && initialSelectedItem == null && (
+        <div className="max-w-screen-md ml-44 flex flex-col items-center gap-20 mb-14">
           <div className="flex gap-10">
             <img
               className="inline-block w-40 h-40 rounded-full ring-2 ring-white"
@@ -120,7 +138,7 @@ const ProfilId = ({ params }: { params: { id: string } }) => {
               </div>
             ))}
           </div>
-          {isModalOpen && selectedItem &&(
+          {isModalOpen && selectedItem && (
             <Modal setIsModalOpen={setIsModalOpen}>
               <UserPostItem
                 profilImage={selectedItem.profilImage}
@@ -134,8 +152,18 @@ const ProfilId = ({ params }: { params: { id: string } }) => {
             </Modal>
           )}
         </div>
-      ) : (
-        <Spinner />
+      )}
+      {!posts && !initialSelectedItem && <Spinner />}
+      {initialSelectedItem && (
+        <SelectedPost
+          profilImage={initialSelectedItem.profilImage}
+          profilImageLarge={initialSelectedItem.profilImageLarge}
+          userName={initialSelectedItem.userName}
+          postImage={initialSelectedItem.postImage}
+          postDescription={initialSelectedItem.postDescription}
+          likes={initialSelectedItem.likes}
+          profilDesc={initialSelectedItem.profilDesc}
+        />
       )}
     </>
   );
