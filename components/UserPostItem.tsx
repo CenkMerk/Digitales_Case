@@ -41,7 +41,7 @@ const UserPostItem = ({
           <p className="font-bold text-sm pt-2">{likes} likes</p>
           <p className="text-sm">
             <span className="font-bold pe-2">
-              {userName ? userName : "userName"}
+              {userName}
             </span>
             {postDescription}
           </p>

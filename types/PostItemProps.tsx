@@ -1,9 +1,9 @@
 export interface PostItemProps {
     profilImage: string;
-    profilImageLarge:string;
+    profilImageLarge?:string;
     userName: string;
     postImage: string;
     postDescription: string;
     likes: number;
-    profilDesc:string;
+    profilDesc?:string;
   }

@@ -1,23 +1,31 @@
-"use client";
-import React, { useEffect } from "react";
+import React from "react";
+import { NavbarData } from "@/constant/NavbarData"; // Importing data for navbar items.
+import { NavbarItemProps } from "@/types/NavbarItemProps";
+//icon
 import { AiOutlineMenu } from "react-icons/ai";
-import NavbarItem from "./NavbarItem";
-import { NavbarData } from "@/constant/NavbarData";
+
+
+const NavbarItem = ({ icon, text }: NavbarItemProps) => (
+  <div className="flex items-center gap-3 py-3 px-1 hover:bg-gray-100 rounded-lg cursor-pointer">
+    {icon}
+    <p>{text}</p>
+  </div>
+);
 
 const Navbar = () => {
   return (
     <nav className="flex flex-col justify-between p-5 min-h-screen border-x-2 fixed top-0 left-0">
       <div className="bg-inherit w-28 px-1">
-        <img src="https://www.vectorlogo.zone/logos/instagram/instagram-wordmark.svg" alt="instagram" width="100%" />
+        <img
+          src="https://www.vectorlogo.zone/logos/instagram/instagram-wordmark.svg"
+          alt="instagram"
+          width="100%"
+        />
       </div>
 
       <div>
         {NavbarData.map((navbarItem, index) => (
-          <NavbarItem
-            key={index}
-            icon={navbarItem.icon}
-            text={navbarItem.text}
-          />
+          <NavbarItem key={index} {...navbarItem} />
         ))}
       </div>
 

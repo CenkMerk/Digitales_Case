@@ -1,37 +1,39 @@
 "use client";
-import Spinner from "@/components/Spinner";
-import { Root2 } from "@/types/ApiProps";
-import { PostItemProps } from "@/types/PostItemProps";
 import React, { useEffect, useState } from "react";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { BsChevronDown } from "react-icons/bs";
-import { BiSolidMessageRounded, BiUserPlus } from "react-icons/bi";
-import { AiFillHeart } from "react-icons/ai";
+import getUserPosts from "@/api/getUserPosts"; // Importing the getUserPosts function for API requests.
+//components
 import Modal from "@/components/Modal";
 import UserPostItem from "@/components/UserPostItem";
-import getUserPosts from "@/api/getUserPosts";
-import { useRouter } from "next/navigation";
 import SelectedPost from "@/components/SelectedPost";
+import PostsList from "@/components/PostsList";
+import Spinner from "@/components/Spinner";
+//type definitions
+import { Root2 } from "@/types/ApiProps";
+import { PostItemProps } from "@/types/PostItemProps";
+//icons
+import { FiMoreHorizontal } from "react-icons/fi";
+import { BsChevronDown } from "react-icons/bs";
+import { BiUserPlus } from "react-icons/bi";
 
 const ProfilId = ({ params }: { params: { id: string } }) => {
-  const router = useRouter();
+  // Retrieve selected post from local storage or initialize as null.
   const storedSelectedItem = localStorage.getItem("selectedItem");
   const initialSelectedItem: PostItemProps | null = storedSelectedItem
     ? JSON.parse(storedSelectedItem)
     : null;
-
-  const [posts, setPosts] = useState<PostItemProps[]>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<PostItemProps | null>(
     initialSelectedItem
   );
+
+  const [posts, setPosts] = useState<PostItemProps[]>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // Use useEffect to fetch data from an API.
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getUserPosts(params.id);
-
+        // Format API response to the required format.
         const formattedPosts = result.map((item: Root2) => ({
           profilImage: item.user.profile_image.medium,
           profilImageLarge: item.user.profile_image.large,
@@ -66,8 +68,10 @@ const ProfilId = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
+      {/* If there are posts and there is no post selected when the page loads, this works. */}
       {posts && initialSelectedItem == null && (
         <div className="max-w-screen-md ml-44 flex flex-col items-center gap-20 mb-14">
+          {/* User's information */}
           <div className="flex gap-10">
             <img
               className="inline-block w-40 h-40 rounded-full ring-2 ring-white"
@@ -112,59 +116,23 @@ const ProfilId = ({ params }: { params: { id: string } }) => {
               <p>{posts[0].profilDesc}</p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            {posts.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-center cursor-pointer relative"
-                onClick={() => HandleClick(item)}
-              >
-                <img
-                  className="h-60 w-full"
-                  src={item.postImage}
-                  alt="postImage"
-                  loading="lazy"
-                />
-                <div className="absolute flex opacity-0 hover:opacity-100 justify-center items-center inset-0 gap-3 transition duration-300 ease-in-out">
-                  <div className="text-white flex items-center">
-                    <AiFillHeart size={30} />
-                    {item.likes}
-                  </div>
-                  <div className="text-white flex items-center">
-                    <BiSolidMessageRounded size={30} />
-                    {Math.floor(Math.random() * 10)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          {isModalOpen && selectedItem && (
-            <Modal setIsModalOpen={setIsModalOpen}>
-              <UserPostItem
-                profilImage={selectedItem.profilImage}
-                userName={selectedItem.userName}
-                postImage={selectedItem.postImage}
-                postDescription={selectedItem.postDescription}
-                likes={selectedItem.likes}
-                profilImageLarge={""}
-                profilDesc={""}
-              />
-            </Modal>
-          )}
+
+          {/* Posts on the user's profile */}
+          {posts && <PostsList posts={posts} HandleClick={HandleClick} />}
         </div>
       )}
-      {!posts && !initialSelectedItem && <Spinner />}
-      {initialSelectedItem && (
-        <SelectedPost
-          profilImage={initialSelectedItem.profilImage}
-          profilImageLarge={initialSelectedItem.profilImageLarge}
-          userName={initialSelectedItem.userName}
-          postImage={initialSelectedItem.postImage}
-          postDescription={initialSelectedItem.postDescription}
-          likes={initialSelectedItem.likes}
-          profilDesc={initialSelectedItem.profilDesc}
-        />
+
+      {/* If the modal is opened this will work */}
+      {isModalOpen && selectedItem && (
+        <Modal setIsModalOpen={setIsModalOpen}>
+          <UserPostItem {...selectedItem} />
+        </Modal>
       )}
+
+      {/* If there is a selected post when the page loads, this works  */}
+      {initialSelectedItem && <SelectedPost />}
+
+      {!posts && !initialSelectedItem && <Spinner />}
     </>
   );
 };
