@@ -13,7 +13,7 @@ const PostsList = ({ posts, HandleClick }: PostsListProps) => {
             className="flex justify-center cursor-pointer relative"
             onClick={() => HandleClick(item)}
           >
-            <img className="w-full" src={item.postImage} alt="postImage" />
+            <img className="w-full h-96" src={item.postImage} alt="postImage" />
             <div className="absolute flex opacity-0 hover:opacity-100 justify-center items-center inset-0 gap-3 transition duration-300 ease-in-out">
               <div className="text-white flex items-center">
                 <AiFillHeart size={30} />
