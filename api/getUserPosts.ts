@@ -15,7 +15,7 @@ const getUserPosts = async (username: string) => {
     return response.data;
   } catch (error) {
     console.error("API fails: ", error);
-    throw error; // Hata yakalanırsa tekrar fırlatın, böylece istemci kodu da ele alabilir
+    throw error;
   }
 };
 
